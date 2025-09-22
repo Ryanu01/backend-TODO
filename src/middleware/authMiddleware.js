@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
-
+import dotenv from 'dotenv';
+dotenv.config();
+const secret = process.env.JWT_SECRET;
 function authMiddleware (req, res, next) {
     const token = req.headers['authorization']
 
@@ -7,7 +9,7 @@ function authMiddleware (req, res, next) {
         return res.status(401).json({message: "No token proived"});
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, secret, (err, decoded) => {
         if (err) {
             return res.status(401).json({message: "Invalid token"});
         }

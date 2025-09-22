@@ -2,7 +2,10 @@ import express, { json } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import db from '../db.js';
+import dotenv from 'dotenv';
+dotenv.config();
 const router = express.Router();
+const secret = process.env.JWT_SECRET;
 
 router.post('/register', (req, res) => {
     const {username, password} = req.body;
@@ -23,7 +26,7 @@ router.post('/register', (req, res) => {
 
         //create a token
         const token = jwt.sign({id: result.lastInsertRowid}, 
-        process.env.JWT_SECRET, {expiresIn: '24h'});
+        secret, {expiresIn: '24h'});
         res.json({ token })
     } catch (error) {
         console.log(error.message);
@@ -49,7 +52,7 @@ router.post('/login', (req, res)=>{
         }
         console.log(user);
         
-        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {
+        const token = jwt.sign({id: user.id}, secret, {
             expiresIn: '24h'
         });
 
